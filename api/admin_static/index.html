@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n="title">Deep Claude Code Admin</title>
+    <link rel="icon" href="data:," />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <link rel="stylesheet" href="/admin/assets/admin.css?v=4" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">FC</div>
+          <div>
+            <h1 data-i18n="brand">Deep Claude Code</h1>
+            <p data-i18n="brandSub">Server Control</p>
+          </div>
+        </div>
+        <div id="cliCommands" class="cli-commands">
+          <p class="cli-label" data-i18n="cliLabel">CLI Commands</p>
+          <button class="cli-cmd" data-cmd="dcc" type="button">
+            <span class="cli-cmd-icon">▸</span>
+            <code>dcc</code>
+          </button>
+          <button class="cli-cmd" data-cmd="dc-claude" type="button">
+            <span class="cli-cmd-icon">▸</span>
+            <code>dc-claude</code>
+          </button>
+        </div>
+        <nav id="sectionNav" class="section-nav" aria-label="Settings sections"></nav>
+        <div class="sidebar-credits">By Yiding, HKEZ</div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow" data-i18n="eyebrow">Local Admin</p>
+            <h2 data-i18n="pageTitle">Runtime Config</h2>
+          </div>
+          <div class="server-state">
+            <button id="themeToggle" class="lang-toggle" type="button" title="Toggle theme">☀</button>
+            <button id="langToggle" class="lang-toggle" type="button" title="Switch language">EN</button>
+            <span id="serverStatus" class="status-pill neutral">Loading</span>
+            <span id="modelBadge" class="model-badge"></span>
+          </div>
+          <div class="url-bar">
+            <div class="url-item">
+              <span class="url-label">Proxy</span>
+              <code id="proxyUrl">http://127.0.0.1:8082</code>
+            </div>
+            <div class="url-item">
+              <span class="url-label">Admin</span>
+              <code id="adminUrl">http://127.0.0.1:8082/admin</code>
+            </div>
+          </div>
+        </header>
+
+        <section class="provider-strip" aria-label="Provider status">
+          <div class="strip-header">
+            <h3 data-i18n="providersTitle">Providers</h3>
+            <div class="strip-actions">
+              <button id="showEnvBtn" class="ghost-button" type="button" data-i18n="genEnv">Generated Env</button>
+              <button id="refreshLocal" class="ghost-button" type="button" data-i18n="checkLocal">Check local</button>
+            </div>
+          </div>
+          <div id="providerGrid" class="provider-grid"></div>
+        </section>
+
+        <section id="formSections" class="form-sections" aria-label="Configuration"></section>
+      </main>
+
+      <!-- Floating Env modal -->
+      <div id="envModal" class="env-modal-overlay" hidden>
+        <div class="env-modal">
+          <div class="env-modal-header">
+            <h3 data-i18n="genEnv">Generated Env</h3>
+            <button id="closeEnvModal" class="ghost-button" type="button">✕</button>
+          </div>
+          <pre id="envPreview" class="env-preview"></pre>
+        </div>
+      </div>
+
+      <footer class="action-bar">
+        <div class="action-meta">
+          <strong id="dirtyState">No changes</strong>
+          <span id="configPath"></span>
+        </div>
+        <div id="messageArea" class="message-area"></div>
+        <div class="action-buttons">
+          <button id="validateButton" class="secondary-button" type="button" data-i18n="validate">Validate</button>
+          <button id="applyButton" class="primary-button" type="button" disabled data-i18n="apply">Apply</button>
+        </div>
+        <div class="footer-oss-link">
+          <a href="https://github.com/Alishahryar1/deep-claude" target="_blank" rel="noopener">deep-claude</a>
+        </div>
+      </footer>
+    </div>
+    <script src="/admin/assets/admin.js?v=4"></script>
+  </body>
+</html>
