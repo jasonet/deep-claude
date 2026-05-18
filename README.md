@@ -14,6 +14,10 @@ Use Claude Code CLI, VS Code, JetBrains ACP, or chat bots through your own Anthr
 
 Deep Claude Code routes Anthropic Messages API traffic from Claude Code to **DeepSeek-first**, plus NVIDIA NIM, Kimi, Wafer, OpenRouter, LM Studio, llama.cpp, Ollama, OpenCode Zen, 9routor, and oMLX. Built for DeepSeek V4 by default with zero-config startup.
 
+<div align="center">
+  <img src="assets/download.jpg" alt="Deep Claude Code" width="700">
+</div>
+
 [Quick Start](#quick-start) · [Providers](#choose-a-provider) · [Clients](#connect-claude-code) · [Configuration](#configuration-reference) · [Development](#development)
 
 </div>
@@ -509,10 +513,6 @@ Run them in that order before pushing. CI enforces the same checks.
 - Add Anthropic Messages providers by extending `AnthropicMessagesTransport`.
 - Register provider metadata in `config.provider_catalog` and factory wiring in `providers.registry`.
 - Add messaging platforms by implementing the `MessagingPlatform` interface in `messaging/`.
-
-<div align="center">
-  <img src="assets/download.jpg" alt="Deep Claude Code" width="700">
-</div>
 
 ## Contributing
 
