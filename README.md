@@ -52,7 +52,7 @@ Deep Claude Code routes Anthropic Messages API traffic from Claude Code to **Dee
 
 ## Quick Start
 
-### 1. Install the latest version of [Claude Code](https://code.claude.com/docs/en/overview)
+### 1. Install the latest version of [Claude Code](https://code.claude.com/docs/en/overview) 
 
 ```bash
 npm install -g @anthropic-ai/claude-code
@@ -98,7 +98,7 @@ Use the same command to update to the latest version.
 dc-server
 ```
 
-After startup, the browser opens the Admin UI automatically:
+After startup, the browser opens the Admin UI automatically, paste your deepseek Key:
 
 ```text
 Server URL: http://127.0.0.1:8082
@@ -110,12 +110,6 @@ Admin UI:  http://127.0.0.1:8082/admin
 Open the **Admin UI** (`http://127.0.0.1:8082/admin`).
 
 Paste your key into **DeepSeek API Key**, then click **Validate** → **Apply**.
-
-All four model tiers default to DeepSeek:
-- Default → `deepseek/deepseek-chat`
-- Opus → `deepseek/deepseek-reasoner`
-- Sonnet → `deepseek/deepseek-chat`
-- Haiku → `deepseek/deepseek-chat`
 
 ### 7. Launch Claude Code
 
@@ -138,13 +132,6 @@ Pick one provider, enter its key or local URL in the Admin UI, and set `MODEL` t
 Get a key at [build.nvidia.com/settings/api-keys](https://build.nvidia.com/settings/api-keys).
 
 In the Admin UI, paste it into `NVIDIA_NIM_API_KEY`. The default `MODEL` is `nvidia_nim/z-ai/glm4.7`.
-
-Popular examples:
-
-- `nvidia_nim/z-ai/glm4.7`
-- `nvidia_nim/z-ai/glm5`
-- `nvidia_nim/moonshotai/kimi-k2.5`
-- `nvidia_nim/minimaxai/minimax-m2.5`
 
 Browse models at [build.nvidia.com](https://build.nvidia.com/explore/discover).
 
@@ -220,15 +207,6 @@ In the Admin UI, paste it into `OPENCODE_API_KEY`, then set `MODEL` to an OpenCo
 
 OpenCode Zen is a curated model gateway that provides access to models from Anthropic, OpenAI, Google, DeepSeek, and more through a single API key and OpenAI-compatible endpoint at `https://opencode.ai/zen/v1`.
 
-Popular examples:
-
-- `opencode/gpt-5.3-codex`
-- `opencode/claude-sonnet-4`
-- `opencode/deepseek-v4-flash-free` (free)
-- `opencode/gemini-3-flash`
-- `opencode/big-pickle` (free)
-- `opencode/glm-5.1`
-
 Browse available models at [opencode.ai](https://opencode.ai).
 
 ### 10. Mix Providers By Model Tier
@@ -244,7 +222,7 @@ For example, you can route Opus to `nvidia_nim/moonshotai/kimi-k2.5`, Sonnet to 
 For terminal use, prefer the installed launcher:
 
 ```bash
-dc-claude
+dcc or dc-claude
 ```
 
 Keep `dc-server` running while you work. The Admin UI manages proxy config, restarts the server when runtime settings change, and `dc-claude` reads the current Admin UI-managed port and auth token every time it starts.
