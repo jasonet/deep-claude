@@ -510,6 +510,10 @@ Run them in that order before pushing. CI enforces the same checks.
 - Register provider metadata in `config.provider_catalog` and factory wiring in `providers.registry`.
 - Add messaging platforms by implementing the `MessagingPlatform` interface in `messaging/`.
 
+<div align="center">
+  <img src="assets/download.jpg" alt="Deep Claude Code" width="700">
+</div>
+
 ## Contributing
 
 - Report bugs and feature requests in [Issues](https://github.com/jasonet/deep-claude/issues).
