@@ -413,10 +413,8 @@ WEB_FETCH_ALLOW_PRIVATE_NETWORKS=false
 ## 工作原理
 
 <div align="center">
-  <img src="assets/how-it-works.svg" alt="Deep Claude Code 请求流架构" width="900">
+  <img src="assets/how-it-works.png" alt="Deep Claude Code 工作原理" width="900">
 </div>
-
-图表源文件：[`assets/how-it-works.mmd`](assets/how-it-works.mmd)。
 
 关键组件：
 
