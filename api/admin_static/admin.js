@@ -6,8 +6,8 @@ const I18N = {
   title:          ["Deep Claude Code Admin",  "Deep Claude Code 管理"],
   brand:          ["Deep Claude Code",        "Deep Claude Code"],
   brandSub:       ["Server Control",          "服务控制台"],
-  eyebrow:        ["Local Admin",             "本地管理"],
-  pageTitle:      ["Runtime Config",          "运行时配置"],
+  eyebrow:        ["Local Admin · Secondary Claude Code",  "本地管理 · Secondary Claude Code"],
+  pageTitle:      ["AI Gateway · Runtime Config",          "AI Gateway · 运行时配置"],
   providersTitle: ["Providers",               "服务商"],
   checkLocal:     ["Check local",             "检查本地"],
   genEnv:         ["Generated Env",           "生成的环境变量"],
@@ -103,6 +103,60 @@ const I18N = {
   restoreDSv4:   ["Restore DS V4", "恢复 DS V4 默认"],
   dsRestored:    ["DeepSeek V4 defaults restored", "已恢复 DeepSeek V4 默认配置"],
 
+  /* ---- Env modal ---- */
+  envPathLabel:  ["File",             "配置文件"],
+  copy:          ["Copy",             "复制"],
+  copied:        ["Copied",           "已复制"],
+
+  /* ---- Validation error panel ---- */
+  errHeader:     ["Validation errors", "校验未通过"],
+  errReset:      ["Reset to default",  "恢复默认"],
+  errBlank:      ["Blank field",       "置空字段"],
+  errResetAll:   ["Reset all invalid to default", "全部恢复默认"],
+
+  /* ---- Server controls ---- */
+  ctlRestart:          ["Restart server", "重启服务"],
+  ctlStop:             ["Stop server",    "停止服务"],
+  ctlStopConfirm:      ["Stop the server? The admin UI will become unreachable until you start it again from terminal or LaunchAgent.", "确认停止服务？停止后 Admin UI 会失联，需要在终端或 LaunchAgent 重新启动。"],
+  ctlStopping:         ["Stopping…",      "正在停止…"],
+  ctlStopped:          ["Stopped — start fcc-server again to resume.", "已停止 — 在终端运行 fcc-server 即可恢复。"],
+  ctlRestarting:       ["Restarting…",    "正在重启…"],
+  ctlRestartFailed:    ["Restart timed out", "重启超时"],
+
+  /* ---- DeepSeek sidebar panel ---- */
+  dsPanelLabel:        ["DeepSeek",     "DeepSeek"],
+  balanceTitleSidebar: ["Balance",      "余额"],
+  balanceEmpty:        ["Not fetched yet", "尚未获取"],
+  balanceFetchedAt:    ["Updated",      "更新于"],
+  balanceCached:       ["cached",       "本地缓存"],
+  trendToday:          ["today",        "今日下降"],
+  trendWeek:           ["this week",    "本周下降"],
+  trendNoData:         ["no baseline",  "暂无基准"],
+
+  /* ---- DeepSeek balance ---- */
+  checkBalance:  ["Check balance",   "查询余额"],
+  balanceLoading:["Checking…",       "查询中…"],
+  balanceMissing:["Set DeepSeek API key first", "请先配置 DeepSeek API Key"],
+  balanceUnavailable:["Balance unavailable", "余额不可用"],
+  balanceError:  ["Balance query failed", "余额查询失败"],
+  balanceTotal:  ["Total",   "总余额"],
+  balanceGranted:["Granted", "赠金"],
+  balanceTopped: ["Topped",  "充值"],
+
+  /* ---- DeepSeek usage ---- */
+  usageTitle:    ["Usage",       "用量"],
+  usageToday:    ["Today",       "今日"],
+  usageWeek:     ["This week",   "本周"],
+  usageMonth:    ["This month",  "本月"],
+  usageEmpty:    ["No requests yet", "暂无请求"],
+  usageCalls:    ["calls",       "次"],
+  usageIn:       ["in",          "输入"],
+  usageOut:      ["out",         "输出"],
+  usageCache:    ["cache",       "缓存"],
+  usageCost:     ["est",         "约"],
+  usageRefresh:  ["Refresh",     "刷新"],
+  usageError:    ["Usage query failed", "用量查询失败"],
+
   /* ---- CLI commands ---- */
   cliLabel:      ["CLI Commands", "客户端指令"],
   cliCopied:     ["Copied to clipboard", "已复制到剪贴板"],
@@ -139,6 +193,9 @@ function toggleLang() {
   try { localStorage.setItem("fcc-admin-lang", currentLang); } catch(_) {}
   applyStaticTranslations();
   load().catch(function(e) { showMessage(e.message, "error"); });
+  if (typeof loadDsBalance === "function") {
+    loadDsBalance(false);
+  }
 }
 
 /* ================================================================
@@ -495,6 +552,55 @@ function renderProviders(providerStatus) {
   });
 }
 
+function formatTokens(n) {
+  if (typeof n !== "number" || n <= 0) return "0";
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(2) + "M";
+  if (n >= 1_000) return (n / 1_000).toFixed(1) + "k";
+  return String(n);
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, function(c) {
+    return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];
+  });
+}
+
+function formatBalance(balance) {
+  if (!balance || !Array.isArray(balance.balance_infos) || balance.balance_infos.length === 0) {
+    return t("balanceUnavailable");
+  }
+  return balance.balance_infos.map(function(info) {
+    return info.currency + " " + t("balanceTotal") + ": " + info.total_balance +
+      " (" + t("balanceGranted") + " " + info.granted_balance +
+      " / " + t("balanceTopped") + " " + info.topped_up_balance + ")";
+  }).join(" · ");
+}
+
+function renderUsageSummary(data) {
+  if (!data || !data.totals || data.totals.calls === 0) {
+    return escapeHtml(t("usageEmpty"));
+  }
+  var totals = data.totals;
+  var head = totals.calls + " " + t("usageCalls") +
+    " · " + t("usageIn") + " " + formatTokens(totals.input_tokens) +
+    " · " + t("usageOut") + " " + formatTokens(totals.output_tokens) +
+    " · " + t("usageCache") + " " + formatTokens(totals.cache_read_input_tokens);
+  if (totals.estimated_cost_cny !== null && totals.estimated_cost_cny !== undefined) {
+    head += " · " + t("usageCost") + " ¥" + totals.estimated_cost_cny.toFixed(2);
+  }
+  var rows = data.by_model.map(function(row) {
+    var line = "<div>" + escapeHtml(row.model) + ": " +
+      row.calls + " " + t("usageCalls") +
+      " · " + t("usageIn") + " " + formatTokens(row.input_tokens) +
+      " · " + t("usageOut") + " " + formatTokens(row.output_tokens);
+    if (row.estimated_cost_cny !== null && row.estimated_cost_cny !== undefined) {
+      line += " · ¥" + row.estimated_cost_cny.toFixed(2);
+    }
+    return line + "</div>";
+  }).join("");
+  return "<div><strong>" + escapeHtml(head) + "</strong></div>" + rows;
+}
+
 function updateProviderCard(providerId, status, label, metaText) {
   var card = document.querySelector('[data-provider="' + providerId + '"]');
   if (!card) return;
@@ -595,6 +701,12 @@ function renderSections(sections, fields) {
 
 /* ---- Tool cards ---- */
 var TOOLS = [
+  {
+    name: "Claude Code Haha",
+    url: "https://github.com/NanmiCoder/cc-haha",
+    desc: "Pluggable enhancements and utilities for Claude Code.",
+    descZh: "为 Claude Code 提供可插拔的增强能力与实用工具。",
+  },
   {
     name: "DeepSeek-TUI",
     url: "https://github.com/Hmbown/DeepSeek-TUI",
@@ -844,9 +956,118 @@ async function validate(showResult) {
 function showValidationResult(result) {
   if (result.valid) {
     showMessage(t("msgValid"), "ok");
-  } else {
-    showMessage(result.errors.join("; "), "error");
+    return;
   }
+  var detailed = result.errors_detailed || [];
+  if (detailed.length === 0) {
+    showMessage((result.errors || []).join("; "), "error");
+    return;
+  }
+  renderValidationErrors(detailed, result.managed_env_path || "");
+}
+
+function renderValidationErrors(detailed, envPath) {
+  var area = byId("messageArea");
+  area.textContent = "";
+  area.className = "message-area error";
+
+  var panel = document.createElement("div");
+  panel.className = "err-panel";
+
+  var head = document.createElement("div");
+  head.className = "err-head";
+  head.textContent = t("errHeader") + " (" + detailed.length + ")";
+  if (envPath) {
+    var pathSpan = document.createElement("span");
+    pathSpan.className = "err-path";
+    pathSpan.textContent = " · " + envPath;
+    head.appendChild(pathSpan);
+  }
+  panel.appendChild(head);
+
+  detailed.forEach(function(row) {
+    var item = document.createElement("div");
+    item.className = "err-item";
+
+    var keyEl = document.createElement("a");
+    keyEl.className = "err-key";
+    keyEl.href = "javascript:void(0)";
+    keyEl.textContent = row.key || "(top-level)";
+    keyEl.addEventListener("click", function() {
+      var input = document.querySelector('[data-key="' + row.key + '"]');
+      if (input) {
+        input.scrollIntoView({ behavior: "smooth", block: "center" });
+        input.focus();
+      }
+    });
+
+    var msg = document.createElement("div");
+    msg.className = "err-msg";
+    msg.textContent = row.message;
+
+    var sug = document.createElement("div");
+    sug.className = "err-sug";
+    sug.textContent = row.suggestion || "";
+
+    var actions = document.createElement("div");
+    actions.className = "err-actions";
+
+    if (row.key) {
+      var resetBtn = document.createElement("button");
+      resetBtn.type = "button";
+      resetBtn.className = "err-btn";
+      resetBtn.textContent = t("errReset");
+      resetBtn.addEventListener("click", function() {
+        if (setFieldValueByKey(row.key, row.default || "")) {
+          validate(true);
+        }
+      });
+      actions.appendChild(resetBtn);
+
+      var blankBtn = document.createElement("button");
+      blankBtn.type = "button";
+      blankBtn.className = "err-btn";
+      blankBtn.textContent = t("errBlank");
+      blankBtn.addEventListener("click", function() {
+        if (setFieldValueByKey(row.key, "")) {
+          validate(true);
+        }
+      });
+      actions.appendChild(blankBtn);
+    }
+
+    item.append(keyEl, msg, sug, actions);
+    panel.appendChild(item);
+  });
+
+  var bulk = document.createElement("button");
+  bulk.type = "button";
+  bulk.className = "err-btn-bulk";
+  bulk.textContent = t("errResetAll");
+  bulk.addEventListener("click", function() {
+    detailed.forEach(function(row) {
+      if (row.key) setFieldValueByKey(row.key, row.default || "");
+    });
+    validate(true);
+  });
+  panel.appendChild(bulk);
+
+  area.appendChild(panel);
+}
+
+function setFieldValueByKey(key, value) {
+  var input = document.querySelector('[data-key="' + key + '"]');
+  if (!input || input.disabled) return false;
+  if (input.type === "checkbox") {
+    input.checked = String(value).toLowerCase() === "true";
+  } else if (input.tagName === "SELECT") {
+    input.value = value || "";
+  } else {
+    input.value = value || "";
+  }
+  input.dispatchEvent(new Event("change", { bubbles: true }));
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+  return true;
 }
 
 async function apply() {
@@ -1037,7 +1258,24 @@ byId("themeToggle").addEventListener("click", function() {
 
 /* ---- Env modal ---- */
 byId("showEnvBtn").addEventListener("click", function() {
+  var pathEl = byId("envModalPath");
+  if (pathEl) {
+    var path = (state.config && state.config.paths && state.config.paths.managed) || "";
+    pathEl.textContent = path;
+  }
   byId("envModal").removeAttribute("hidden");
+});
+byId("copyEnvPath").addEventListener("click", function() {
+  var path = byId("envModalPath").textContent || "";
+  if (!path) return;
+  var btn = byId("copyEnvPath");
+  var original = btn.textContent;
+  navigator.clipboard.writeText(path).then(function() {
+    btn.textContent = t("copied");
+    setTimeout(function() { btn.textContent = original; }, 1200);
+  }).catch(function() {
+    // ignore
+  });
 });
 byId("closeEnvModal").addEventListener("click", function() {
   byId("envModal").setAttribute("hidden", "");
@@ -1048,8 +1286,191 @@ byId("envModal").addEventListener("click", function(e) {
 
 applyStaticTranslations();
 
+initServerControls();
+initDeepseekPanel();
+
 load().catch(function(error) {
   byId("serverStatus").textContent = t("error");
   byId("serverStatus").className = "status-pill error";
   showMessage(error.message, "error");
 });
+
+/* ================================================================
+   Server controls (Stop / Restart)
+   ================================================================ */
+function initServerControls() {
+  byId("stopServer").addEventListener("click", handleStopServer);
+  byId("restartServer").addEventListener("click", handleRestartServer);
+}
+
+async function handleStopServer() {
+  if (!confirm(t("ctlStopConfirm"))) return;
+  var pill = byId("serverStatus");
+  setServerCtlEnabled(false);
+  showMessage(t("ctlStopping"));
+  try {
+    await fetch("/admin/api/server/stop", { method: "POST" });
+  } catch (_) {
+    // Connection may be cut mid-shutdown — treat as success.
+  }
+  pill.textContent = t("ctlStopped");
+  pill.className = "status-pill error";
+  showMessage(t("ctlStopped"), "error");
+}
+
+async function handleRestartServer() {
+  var pill = byId("serverStatus");
+  setServerCtlEnabled(false);
+  pill.textContent = t("ctlRestarting");
+  pill.className = "status-pill neutral";
+  showMessage(t("ctlRestarting"));
+  try {
+    await fetch("/admin/api/server/restart", { method: "POST" });
+  } catch (_) {
+    // Connection may be cut mid-restart — keep polling below.
+  }
+  var ok = await waitForServerBack(20000);
+  if (ok) {
+    showMessage("", "");
+    load().catch(function(e) { showMessage(e.message, "error"); });
+  } else {
+    pill.textContent = t("ctlRestartFailed");
+    pill.className = "status-pill error";
+    showMessage(t("ctlRestartFailed"), "error");
+  }
+  setServerCtlEnabled(true);
+}
+
+function setServerCtlEnabled(enabled) {
+  byId("stopServer").disabled = !enabled;
+  byId("restartServer").disabled = !enabled;
+}
+
+async function waitForServerBack(timeoutMs) {
+  var deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    await new Promise(function(r) { setTimeout(r, 700); });
+    try {
+      var resp = await fetch("/admin/api/status", { cache: "no-store" });
+      if (resp.ok) return true;
+    } catch (_) {
+      // keep polling
+    }
+  }
+  return false;
+}
+
+/* ================================================================
+   DeepSeek sidebar panel
+   ================================================================ */
+function initDeepseekPanel() {
+  byId("dsBalanceRefresh").addEventListener("click", function() {
+    loadDsBalance(true);
+  });
+  loadDsBalance(false);
+}
+
+async function loadDsBalance(refresh) {
+  var body = byId("dsBalanceBody");
+  var trend = byId("dsTrendBody");
+  var btn = byId("dsBalanceRefresh");
+  if (refresh) {
+    btn.disabled = true;
+    btn.textContent = t("balanceLoading");
+  }
+  try {
+    var url = "/admin/api/providers/deepseek/balance" + (refresh ? "?refresh=true" : "");
+    var response = await fetch(url);
+    var data = await response.json();
+    body.innerHTML = renderDsBalance(data);
+    trend.innerHTML = renderDsTrend(data);
+  } catch (e) {
+    body.textContent = t("balanceError");
+    trend.textContent = "";
+  } finally {
+    if (refresh) {
+      btn.disabled = false;
+      btn.textContent = t("usageRefresh");
+    }
+  }
+}
+
+function renderDsTrend(data) {
+  if (!data || !data.ok || !data.trend || !Array.isArray(data.trend.by_currency) || data.trend.by_currency.length === 0) {
+    return "";
+  }
+  return data.trend.by_currency.map(function(row) {
+    var symbol = row.currency === "CNY" ? "¥" : (row.currency === "USD" ? "$" : (row.currency + " "));
+    var todayPart;
+    if (row.today_drop === null || row.today_drop === undefined) {
+      todayPart = t("trendNoData");
+    } else {
+      todayPart = formatTrend(row.today_drop, symbol);
+    }
+    var weekPart;
+    if (row.week_drop === null || row.week_drop === undefined) {
+      weekPart = t("trendNoData");
+    } else {
+      weekPart = formatTrend(row.week_drop, symbol);
+    }
+    return "<div>" + escapeHtml(row.currency) + " · " +
+      escapeHtml(t("trendToday")) + " " + todayPart + " · " +
+      escapeHtml(t("trendWeek")) + " " + weekPart + "</div>";
+  }).join("");
+}
+
+function formatTrend(drop, symbol) {
+  if (drop > 0) {
+    return "<span style=\"color:#ff7a7a\">-" + symbol + drop.toFixed(2) + "</span>";
+  }
+  if (drop < 0) {
+    return "<span style=\"color:#59d994\">+" + symbol + Math.abs(drop).toFixed(2) + "</span>";
+  }
+  return symbol + "0.00";
+}
+
+function renderDsBalance(data) {
+  if (!data || !data.ok) {
+    if (data && data.error === "missing_key") return escapeHtml(t("balanceMissing"));
+    if (data && data.error === "no_cache") return escapeHtml(t("balanceEmpty"));
+    if (data && data.error === "upstream_error") {
+      return escapeHtml(t("balanceError") + " (" + data.status_code + ")");
+    }
+    return escapeHtml(t("balanceError"));
+  }
+  var line = formatBalance(data.balance);
+  var meta = "";
+  if (data.cached) meta += " · " + t("balanceCached");
+  if (data.fetched_at) {
+    meta += " · " + t("balanceFetchedAt") + " " + formatTimestamp(data.fetched_at);
+  }
+  return "<div><strong>" + escapeHtml(line) + "</strong></div>" +
+    (meta ? "<div>" + escapeHtml(meta.slice(3)) + "</div>" : "");
+}
+
+async function loadDsUsage(period) {
+  var body = byId("dsUsageBody");
+  try {
+    var response = await fetch("/admin/api/providers/deepseek/usage?period=" + encodeURIComponent(period));
+    if (!response.ok) {
+      body.textContent = t("usageError");
+      return;
+    }
+    var data = await response.json();
+    body.innerHTML = renderUsageSummary(data);
+  } catch (e) {
+    body.textContent = t("usageError");
+  }
+}
+
+function formatTimestamp(iso) {
+  try {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return iso;
+    var pad = function(n) { return String(n).padStart(2, "0"); };
+    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) +
+      " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
+  } catch (_) {
+    return iso;
+  }
+}

@@ -23,6 +23,7 @@ from core.anthropic.native_sse_block_policy import (
     transform_native_sse_block_event,
 )
 from core.trace import provider_native_messages_body_snapshot, trace_event
+from core.usage_tracker import record_usage
 from providers.base import BaseProvider, ProviderConfig
 from providers.error_mapping import (
     map_error,
@@ -408,6 +409,20 @@ class AnthropicMessagesTransport(BaseProvider):
                     sse_chunks_out=chunk_count,
                     sse_bytes_out=chunk_bytes,
                 )
+
+                if self._provider_name == "DEEPSEEK" and emitted_tracker.usage:
+                    await record_usage(
+                        provider=self._provider_name,
+                        model=emitted_tracker.model or (body.get("model") or ""),
+                        input_tokens=emitted_tracker.usage.get("input_tokens", 0),
+                        output_tokens=emitted_tracker.usage.get("output_tokens", 0),
+                        cache_read_input_tokens=emitted_tracker.usage.get(
+                            "cache_read_input_tokens", 0
+                        ),
+                        cache_creation_input_tokens=emitted_tracker.usage.get(
+                            "cache_creation_input_tokens", 0
+                        ),
+                    )
 
             except Exception as error:
                 if not isinstance(error, httpx.HTTPStatusError):

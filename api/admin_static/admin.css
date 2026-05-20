@@ -168,6 +168,225 @@ textarea {
   border-color: var(--accent);
 }
 
+/* ---- Validation error panel ---- */
+.err-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #ff7a7a;
+  border-radius: 6px;
+  background: rgba(255, 122, 122, 0.06);
+  max-width: 100%;
+  font-size: 12px;
+}
+
+.err-head {
+  font-weight: 600;
+  color: #ff7a7a;
+}
+
+.err-path {
+  font-weight: 400;
+  color: var(--muted);
+  font-family: "SF Mono", "Fira Code", ui-monospace, monospace;
+}
+
+.err-item {
+  display: grid;
+  grid-template-columns: minmax(140px, auto) 1fr;
+  grid-template-areas:
+    "key  msg"
+    "key  sug"
+    "act  act";
+  column-gap: 12px;
+  row-gap: 2px;
+  padding: 6px 0;
+  border-top: 1px dashed rgba(255, 122, 122, 0.25);
+}
+
+.err-key {
+  grid-area: key;
+  color: var(--accent);
+  text-decoration: none;
+  font-family: "SF Mono", "Fira Code", ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.err-key:hover { text-decoration: underline; }
+
+.err-msg {
+  grid-area: msg;
+  color: var(--text);
+}
+
+.err-sug {
+  grid-area: sug;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.err-actions {
+  grid-area: act;
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.err-btn,
+.err-btn-bulk {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  border-radius: 4px;
+  padding: 2px 10px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.err-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.err-btn-bulk {
+  align-self: flex-start;
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.err-btn-bulk:hover { border-color: #ff7a7a; color: #ff7a7a; }
+
+/* ---- Server control buttons ---- */
+.server-ctl {
+  margin-left: 4px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.server-ctl:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.server-ctl.danger:hover {
+  border-color: #ff7a7a;
+  color: #ff7a7a;
+}
+
+.server-ctl[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ---- DeepSeek sidebar panel ---- */
+.ds-panel {
+  margin: 0 0 14px 0;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-strong);
+}
+
+.ds-panel-label {
+  margin: 0 0 8px 2px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ds-section {
+  margin-bottom: 10px;
+}
+
+.ds-section:last-child {
+  margin-bottom: 0;
+}
+
+.ds-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.ds-row-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.ds-refresh {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.ds-refresh:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.ds-refresh[disabled] {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.ds-tabs {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 4px;
+}
+
+.ds-tab {
+  flex: 1;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.ds-tab.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.ds-body {
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+  word-break: break-all;
+}
+
+.ds-body strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.ds-trend {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--line);
+}
+
+.ds-trend:empty {
+  display: none;
+}
+
 /* ---- sidebar credits ---- */
 .sidebar-credits {
   margin-top: auto;
@@ -603,6 +822,21 @@ textarea {
   gap: 14px;
 }
 
+/* Models: 4 columns × 2 rows, column-flow so each column = (model, thinking) pair */
+#section-models .field-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(2, auto);
+  grid-auto-flow: column;
+  gap: 6px 12px;
+}
+
+@media (max-width: 900px) {
+  #section-models .field-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(4, auto);
+  }
+}
+
 /* Compact layout: Runtime & Messaging — narrower inputs, single row */
 #section-runtime .field-grid,
 #section-messaging .field-grid {
@@ -741,6 +975,39 @@ textarea {
 .env-modal-header h3 {
   margin: 0;
   font-size: 16px;
+}
+
+.env-modal-path {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel-strong);
+  font-size: 12px;
+}
+
+.env-modal-path .env-path-label {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.env-modal-path code {
+  flex: 1;
+  font-family: "SF Mono", "Fira Code", ui-monospace, monospace;
+  color: var(--accent);
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.env-path-copy {
+  padding: 2px 8px;
+  font-size: 11px;
 }
 
 .env-preview {

@@ -20,6 +20,7 @@ class EmittedNativeSseTracker:
         self._max_index = -1
         self.message_id: str | None = None
         self.model: str = ""
+        self.usage: dict[str, int] = {}
 
     def feed(self, chunk: str) -> None:
         """Record SSE frames completed by ``chunk`` (handles splitting across reads)."""
@@ -45,6 +46,11 @@ class EmittedNativeSseTracker:
                 model = message.get("model")
                 if isinstance(model, str) and model:
                     self.model = model
+                self._merge_usage(message.get("usage"))
+            return
+
+        if event.event == "message_delta":
+            self._merge_usage(event.data.get("usage"))
             return
 
         if event.event == "content_block_start":
@@ -60,6 +66,19 @@ class EmittedNativeSseTracker:
             else:
                 with suppress(ValueError):
                     self._open_stack.remove(idx)
+
+    def _merge_usage(self, usage: Any) -> None:
+        if not isinstance(usage, dict):
+            return
+        for key in (
+            "input_tokens",
+            "output_tokens",
+            "cache_read_input_tokens",
+            "cache_creation_input_tokens",
+        ):
+            value = usage.get(key)
+            if isinstance(value, int):
+                self.usage[key] = value
 
     def next_content_index(self) -> int:
         """Next unused content block index based on emitted starts."""

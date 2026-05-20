@@ -62,6 +62,7 @@ def _run_supervised_server(settings: Settings) -> bool:
     """Run one uvicorn server instance; return whether admin requested restart."""
 
     restart_requested = False
+    stop_requested = False
     server_holder: dict[str, uvicorn.Server] = {}
 
     def request_restart() -> None:
@@ -70,8 +71,15 @@ def _run_supervised_server(settings: Settings) -> bool:
         if server := server_holder.get("server"):
             server.should_exit = True
 
+    def request_stop() -> None:
+        nonlocal stop_requested
+        stop_requested = True
+        if server := server_holder.get("server"):
+            server.should_exit = True
+
     app = create_app(lifespan_enabled=False)
     app.state.admin_restart_callback = request_restart
+    app.state.admin_stop_callback = request_stop
     asgi_app = GracefulLifespanApp(app)
     config = uvicorn.Config(
         asgi_app,
@@ -83,7 +91,7 @@ def _run_supervised_server(settings: Settings) -> bool:
     server = uvicorn.Server(config)
     server_holder["server"] = server
     server.run()
-    return restart_requested
+    return restart_requested and not stop_requested
 
 
 def init() -> None:
@@ -171,6 +179,7 @@ def _launch_claude_with_brand(brand: str, argv: Sequence[str] | None = None) -> 
 
     # Inject title patch via NODE_OPTIONS
     import importlib.resources
+
     patch_js = str(Path(__file__).resolve().parent / "patch_title.js")
     node_opts = os.environ.get("NODE_OPTIONS", "")
     env = _claude_child_env(settings, os.environ)

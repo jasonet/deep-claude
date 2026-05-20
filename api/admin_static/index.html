@@ -6,7 +6,7 @@
     <title data-i18n="title">Deep Claude Code Admin</title>
     <link rel="icon" href="data:," />
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <link rel="stylesheet" href="/admin/assets/admin.css?v=4" />
+    <link rel="stylesheet" href="/admin/assets/admin.css?v=13" />
   </head>
   <body>
     <div class="app-shell">
@@ -29,6 +29,17 @@
             <code>dc-claude</code>
           </button>
         </div>
+        <div id="deepseekPanel" class="ds-panel">
+          <p class="ds-panel-label" data-i18n="dsPanelLabel">DeepSeek</p>
+          <div class="ds-section">
+            <div class="ds-row">
+              <span class="ds-row-label" data-i18n="balanceTitleSidebar">Balance</span>
+              <button id="dsBalanceRefresh" class="ds-refresh" type="button" data-i18n="usageRefresh">Refresh</button>
+            </div>
+            <div id="dsBalanceBody" class="ds-body">…</div>
+            <div id="dsTrendBody" class="ds-body ds-trend">…</div>
+          </div>
+        </div>
         <nav id="sectionNav" class="section-nav" aria-label="Settings sections"></nav>
         <div class="sidebar-credits">By Yiding, HKEZ</div>
       </aside>
@@ -43,6 +54,8 @@
             <button id="themeToggle" class="lang-toggle" type="button" title="Toggle theme">☀</button>
             <button id="langToggle" class="lang-toggle" type="button" title="Switch language">EN</button>
             <span id="serverStatus" class="status-pill neutral">Loading</span>
+            <button id="restartServer" class="server-ctl" type="button" data-i18n="ctlRestart" title="Restart server">↻</button>
+            <button id="stopServer" class="server-ctl danger" type="button" data-i18n="ctlStop" title="Stop server">⏻</button>
             <span id="modelBadge" class="model-badge"></span>
           </div>
           <div class="url-bar">
@@ -78,6 +91,11 @@
             <h3 data-i18n="genEnv">Generated Env</h3>
             <button id="closeEnvModal" class="ghost-button" type="button">✕</button>
           </div>
+          <div class="env-modal-path">
+            <span class="env-path-label" data-i18n="envPathLabel">File</span>
+            <code id="envModalPath"></code>
+            <button id="copyEnvPath" class="ghost-button env-path-copy" type="button" data-i18n="copy">Copy</button>
+          </div>
           <pre id="envPreview" class="env-preview"></pre>
         </div>
       </div>
@@ -97,6 +115,6 @@
         </div>
       </footer>
     </div>
-    <script src="/admin/assets/admin.js?v=4"></script>
+    <script src="/admin/assets/admin.js?v=14"></script>
   </body>
 </html>

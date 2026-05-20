@@ -111,6 +111,10 @@ class Settings(BaseSettings):
 
     # ==================== DeepSeek Config ====================
     deepseek_api_key: str = Field(default="", validation_alias="DEEPSEEK_API_KEY")
+    deepseek_base_url: str = Field(
+        default="https://api.deepseek.com/anthropic",
+        validation_alias="DEEPSEEK_BASE_URL",
+    )
 
     # ==================== Kimi Config ====================
     kimi_api_key: str = Field(default="", validation_alias="KIMI_API_KEY")
@@ -175,9 +179,15 @@ class Settings(BaseSettings):
 
     # Per-model overrides (optional, falls back to MODEL)
     # Each can use a different provider
-    model_opus: str | None = Field(default="deepseek/deepseek-v4-pro", validation_alias="MODEL_OPUS")
-    model_sonnet: str | None = Field(default="deepseek/deepseek-v4-pro", validation_alias="MODEL_SONNET")
-    model_haiku: str | None = Field(default="deepseek/deepseek-v4-flash", validation_alias="MODEL_HAIKU")
+    model_opus: str | None = Field(
+        default="deepseek/deepseek-v4-pro", validation_alias="MODEL_OPUS"
+    )
+    model_sonnet: str | None = Field(
+        default="deepseek/deepseek-v4-pro", validation_alias="MODEL_SONNET"
+    )
+    model_haiku: str | None = Field(
+        default="deepseek/deepseek-v4-flash", validation_alias="MODEL_HAIKU"
+    )
 
     # ==================== Per-Provider Proxy ====================
     nvidia_nim_proxy: str = Field(default="", validation_alias="NVIDIA_NIM_PROXY")

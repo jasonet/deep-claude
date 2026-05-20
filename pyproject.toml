@@ -30,6 +30,10 @@ deep-claude = "cli.entrypoints:serve"
 dc-init = "cli.entrypoints:init"
 dcc = "cli.entrypoints:launch_dcc"
 dc-claude = "cli.entrypoints:launch_dc_claude"
+fcc-server = "cli.entrypoints:serve"
+fcc-init = "cli.entrypoints:init"
+fcc-claude = "cli.entrypoints:launch_claude"
+free-claude-code = "cli.entrypoints:serve"
 
 [project.optional-dependencies]
 voice = [

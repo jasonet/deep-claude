@@ -77,11 +77,6 @@ SECTIONS: tuple[ConfigSectionSpec, ...] = (
         "Provider-prefixed models used for Claude model tiers.",
     ),
     ConfigSectionSpec(
-        "thinking",
-        "Thinking",
-        "Global and tier-specific thinking behavior.",
-    ),
-    ConfigSectionSpec(
         "runtime",
         "Runtime",
         "Server API token, rate limits, timeouts, and process settings.",
@@ -130,12 +125,97 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         settings_attr="deepseek_api_key",
     ),
     ConfigFieldSpec(
+        "DEEPSEEK_BASE_URL",
+        "DeepSeek Base URL",
+        "providers",
+        settings_attr="deepseek_base_url",
+        default="https://api.deepseek.com/anthropic",
+        description="Override only for self-hosted or regional proxies.",
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "NVIDIA_NIM_API_KEY",
+        "NVIDIA NIM API Key",
+        "providers",
+        "text",
+        settings_attr="nvidia_nim_api_key",
+        description="Used by NVIDIA NIM chat and optional NIM voice transcription.",
+    ),
+    ConfigFieldSpec(
+        "NVIDIA_NIM_PROXY",
+        "NVIDIA NIM Proxy",
+        "providers",
+        "text",
+        settings_attr="nvidia_nim_proxy",
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "OPENROUTER_API_KEY",
+        "OpenRouter API Key",
+        "providers",
+        "text",
+        settings_attr="open_router_api_key",
+    ),
+    ConfigFieldSpec(
+        "OPENROUTER_PROXY",
+        "OpenRouter Proxy",
+        "providers",
+        "text",
+        settings_attr="open_router_proxy",
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "KIMI_API_KEY",
+        "Kimi API Key",
+        "providers",
+        "text",
+        settings_attr="kimi_api_key",
+    ),
+    ConfigFieldSpec(
+        "KIMI_PROXY",
+        "Kimi Proxy",
+        "providers",
+        "text",
+        settings_attr="kimi_proxy",
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "WAFER_API_KEY",
+        "Wafer API Key",
+        "providers",
+        "text",
+        settings_attr="wafer_api_key",
+    ),
+    ConfigFieldSpec(
+        "WAFER_PROXY",
+        "Wafer Proxy",
+        "providers",
+        "text",
+        settings_attr="wafer_proxy",
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "OPENCODE_API_KEY",
+        "OpenCode Zen API Key",
+        "providers",
+        "text",
+        settings_attr="opencode_api_key",
+        description="OpenCode Zen curated model gateway at opencode.ai.",
+    ),
+    ConfigFieldSpec(
+        "OPENCODE_PROXY",
+        "OpenCode Zen Proxy",
+        "providers",
+        "text",
+        settings_attr="opencode_proxy",
+        advanced=True,
+    ),
+    ConfigFieldSpec(
         "NINEROUTER_API_KEY",
         "9routor API Key",
         "providers",
         "text",
         settings_attr="ninerouter_api_key",
-
         description="Optional API key for 9routor proxy (leave blank).",
     ),
     ConfigFieldSpec(
@@ -145,6 +225,7 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         settings_attr="ninerouter_base_url",
         default="http://localhost:20128/v1",
         description="9routor local proxy OpenAI-compatible endpoint.",
+        advanced=True,
     ),
     ConfigFieldSpec(
         "OMLX_API_KEY",
@@ -152,7 +233,6 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         "providers",
         "text",
         settings_attr="omlx_api_key",
-
         description="Optional API key for oMLX (leave blank for local).",
     ),
     ConfigFieldSpec(
@@ -162,48 +242,7 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         settings_attr="omlx_base_url",
         default="http://localhost:10240/v1",
         description="oMLX local OpenAI-compatible endpoint.",
-    ),
-    ConfigFieldSpec(
-        "NVIDIA_NIM_API_KEY",
-        "NVIDIA NIM API Key",
-        "providers",
-        "text",
-        settings_attr="nvidia_nim_api_key",
-
-        description="Used by NVIDIA NIM chat and optional NIM voice transcription.",
-    ),
-    ConfigFieldSpec(
-        "OPENROUTER_API_KEY",
-        "OpenRouter API Key",
-        "providers",
-        "text",
-        settings_attr="open_router_api_key",
-
-    ),
-    ConfigFieldSpec(
-        "KIMI_API_KEY",
-        "Kimi API Key",
-        "providers",
-        "text",
-        settings_attr="kimi_api_key",
-
-    ),
-    ConfigFieldSpec(
-        "WAFER_API_KEY",
-        "Wafer API Key",
-        "providers",
-        "text",
-        settings_attr="wafer_api_key",
-
-    ),
-    ConfigFieldSpec(
-        "OPENCODE_API_KEY",
-        "OpenCode Zen API Key",
-        "providers",
-        "text",
-        settings_attr="opencode_api_key",
-
-        description="OpenCode Zen curated model gateway at opencode.ai.",
+        advanced=True,
     ),
     ConfigFieldSpec(
         "LM_STUDIO_BASE_URL",
@@ -211,37 +250,6 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         "providers",
         settings_attr="lm_studio_base_url",
         default="http://localhost:1234/v1",
-    ),
-    ConfigFieldSpec(
-        "LLAMACPP_BASE_URL",
-        "llama.cpp Base URL",
-        "providers",
-        settings_attr="llamacpp_base_url",
-        default="http://localhost:8080/v1",
-    ),
-    ConfigFieldSpec(
-        "OLLAMA_BASE_URL",
-        "Ollama Base URL",
-        "providers",
-        settings_attr="ollama_base_url",
-        default="http://localhost:11434",
-    ),
-    ConfigFieldSpec(
-        "NVIDIA_NIM_PROXY",
-        "NVIDIA NIM Proxy",
-        "providers",
-        "text",
-        settings_attr="nvidia_nim_proxy",
-
-        advanced=True,
-    ),
-    ConfigFieldSpec(
-        "OPENROUTER_PROXY",
-        "OpenRouter Proxy",
-        "providers",
-        "text",
-        settings_attr="open_router_proxy",
-
         advanced=True,
     ),
     ConfigFieldSpec(
@@ -250,7 +258,14 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         "providers",
         "text",
         settings_attr="lmstudio_proxy",
-
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "LLAMACPP_BASE_URL",
+        "llama.cpp Base URL",
+        "providers",
+        settings_attr="llamacpp_base_url",
+        default="http://localhost:8080/v1",
         advanced=True,
     ),
     ConfigFieldSpec(
@@ -259,34 +274,14 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         "providers",
         "text",
         settings_attr="llamacpp_proxy",
-
         advanced=True,
     ),
     ConfigFieldSpec(
-        "KIMI_PROXY",
-        "Kimi Proxy",
+        "OLLAMA_BASE_URL",
+        "Ollama Base URL",
         "providers",
-        "text",
-        settings_attr="kimi_proxy",
-
-        advanced=True,
-    ),
-    ConfigFieldSpec(
-        "WAFER_PROXY",
-        "Wafer Proxy",
-        "providers",
-        "text",
-        settings_attr="wafer_proxy",
-
-        advanced=True,
-    ),
-    ConfigFieldSpec(
-        "OPENCODE_PROXY",
-        "OpenCode Zen Proxy",
-        "providers",
-        "text",
-        settings_attr="opencode_proxy",
-
+        settings_attr="ollama_base_url",
+        default="http://localhost:11434",
         advanced=True,
     ),
     ConfigFieldSpec(
@@ -298,11 +293,28 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         description="Fallback model (used when Opus/Sonnet/Haiku are unset or unreachable).",
     ),
     ConfigFieldSpec(
+        "ENABLE_MODEL_THINKING",
+        "Thinking Option",
+        "models",
+        "boolean",
+        settings_attr="enable_model_thinking",
+        default="true",
+        description="Master toggle; per-tier values below inherit it when blank.",
+    ),
+    ConfigFieldSpec(
         "MODEL_OPUS",
         "Opus Override",
         "models",
         settings_attr="model_opus",
         description="Optional. Falls back to Default Model when blank.",
+    ),
+    ConfigFieldSpec(
+        "ENABLE_OPUS_THINKING",
+        "Opus Thinking",
+        "models",
+        "tri_boolean",
+        settings_attr="enable_opus_thinking",
+        description="Blank inherits Thinking Option.",
     ),
     ConfigFieldSpec(
         "MODEL_SONNET",
@@ -312,6 +324,14 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         description="Optional. Falls back to Default Model when blank.",
     ),
     ConfigFieldSpec(
+        "ENABLE_SONNET_THINKING",
+        "Sonnet Thinking",
+        "models",
+        "tri_boolean",
+        settings_attr="enable_sonnet_thinking",
+        description="Blank inherits Thinking Option.",
+    ),
+    ConfigFieldSpec(
         "MODEL_HAIKU",
         "Haiku Override",
         "models",
@@ -319,36 +339,12 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         description="Optional. Falls back to Default Model when blank.",
     ),
     ConfigFieldSpec(
-        "ENABLE_MODEL_THINKING",
-        "Enable Thinking",
-        "thinking",
-        "boolean",
-        settings_attr="enable_model_thinking",
-        default="true",
-    ),
-    ConfigFieldSpec(
-        "ENABLE_OPUS_THINKING",
-        "Opus Thinking",
-        "thinking",
-        "tri_boolean",
-        settings_attr="enable_opus_thinking",
-        description="Blank inherits Enable Thinking.",
-    ),
-    ConfigFieldSpec(
-        "ENABLE_SONNET_THINKING",
-        "Sonnet Thinking",
-        "thinking",
-        "tri_boolean",
-        settings_attr="enable_sonnet_thinking",
-        description="Blank inherits Enable Thinking.",
-    ),
-    ConfigFieldSpec(
         "ENABLE_HAIKU_THINKING",
         "Haiku Thinking",
-        "thinking",
+        "models",
         "tri_boolean",
         settings_attr="enable_haiku_thinking",
-        description="Blank inherits Enable Thinking.",
+        description="Blank inherits Thinking Option.",
     ),
     ConfigFieldSpec(
         "ANTHROPIC_AUTH_TOKEN",
@@ -357,7 +353,6 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         "text",
         settings_attr="anthropic_auth_token",
         default="dc-auth",
-
         description="Protects Claude/API access. It is not admin-page login.",
     ),
     ConfigFieldSpec(
@@ -467,7 +462,6 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         "messaging",
         "text",
         settings_attr="telegram_bot_token",
-
         session_sensitive=True,
     ),
     ConfigFieldSpec(
@@ -483,7 +477,6 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         "messaging",
         "text",
         settings_attr="discord_bot_token",
-
         session_sensitive=True,
     ),
     ConfigFieldSpec(
@@ -558,7 +551,6 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         "voice",
         "text",
         settings_attr="hf_token",
-
         session_sensitive=True,
     ),
     ConfigFieldSpec(
@@ -995,8 +987,10 @@ def _effective_values_for_validation(
     return values
 
 
-def validate_values(values: Mapping[str, str]) -> tuple[bool, list[str]]:
-    """Validate proposed env values against the Settings model."""
+def validate_values(
+    values: Mapping[str, str],
+) -> tuple[bool, list[str], list[dict[str, str]]]:
+    """Validate proposed env values; return (ok, legacy strings, structured rows)."""
 
     kwargs: dict[str, Any] = {"_env_file": None}
     for field in FIELDS:
@@ -1008,17 +1002,56 @@ def validate_values(values: Mapping[str, str]) -> tuple[bool, list[str]]:
     try:
         Settings(**kwargs)
     except ValidationError as exc:
-        return False, _format_validation_errors(exc)
-    return True, []
+        legacy, detailed = _format_validation_errors(exc, values)
+        return False, legacy, detailed
+    return True, [], []
 
 
-def _format_validation_errors(exc: ValidationError) -> list[str]:
-    errors: list[str] = []
+_FIELD_BY_SETTINGS_ATTR = {
+    field.settings_attr: field for field in FIELDS if field.settings_attr is not None
+}
+
+
+def _format_validation_errors(
+    exc: ValidationError, attempted: Mapping[str, str]
+) -> tuple[list[str], list[dict[str, str]]]:
+    legacy: list[str] = []
+    detailed: list[dict[str, str]] = []
+    seen_keys: set[str] = set()
     for error in exc.errors():
-        loc = ".".join(str(part) for part in error.get("loc", ()))
+        loc_parts = [str(part) for part in error.get("loc", ())]
+        loc = ".".join(loc_parts)
         message = str(error.get("msg", "Invalid value"))
-        errors.append(f"{loc}: {message}" if loc else message)
-    return errors
+        legacy.append(f"{loc}: {message}" if loc else message)
+
+        attr = loc_parts[0] if loc_parts else ""
+        field = _FIELD_BY_SETTINGS_ATTR.get(attr)
+        key = field.key if field else (attr.upper() if attr else "")
+        if key in seen_keys:
+            continue
+        if key:
+            seen_keys.add(key)
+        attempted_raw = str(attempted.get(key, "")) if key else ""
+        detailed.append(
+            {
+                "key": key,
+                "label": field.label if field else key,
+                "section": field.section_id if field else "",
+                "message": message,
+                "default": field.default if field else "",
+                "attempted": attempted_raw if not (field and field.secret) else "",
+                "suggestion": _suggestion_for_field(field),
+            }
+        )
+    return legacy, detailed
+
+
+def _suggestion_for_field(field: ConfigFieldSpec | None) -> str:
+    if field is None:
+        return "Reset this field to blank or fix the value."
+    if field.default:
+        return f"Reset to default: {field.default!s}"
+    return "Leave blank or refer to .env.example."
 
 
 def validate_updates(updates: Mapping[str, Any]) -> dict[str, Any]:
@@ -1026,11 +1059,13 @@ def validate_updates(updates: Mapping[str, Any]) -> dict[str, Any]:
 
     target_values = _target_values_with_updates(updates)
     effective_values = _effective_values_for_validation(target_values)
-    valid, errors = validate_values(effective_values)
+    valid, errors, errors_detailed = validate_values(effective_values)
     return {
         "valid": valid,
         "errors": errors,
+        "errors_detailed": errors_detailed,
         "env_preview": render_env_file(target_values, mask_secrets=True),
+        "managed_env_path": str(managed_env_path()),
     }
 
 
