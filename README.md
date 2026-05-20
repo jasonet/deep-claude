@@ -26,22 +26,11 @@ Deep Claude Code 把 Claude Code 的 Anthropic Messages API 流量路由到 **De
   <img src="assets/pic.png" alt="Deep Claude Code 实际效果" width="700">
 </div>
 
-## Star History
-
-<div align="center">
-  <a href="https://star-history.com/#jasonet/deep-claude&Date">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=jasonet/deep-claude&type=Date&theme=dark">
-      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=jasonet/deep-claude&type=Date">
-      <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=jasonet/deep-claude&type=Date" width="700">
-    </picture>
-  </a>
-</div>
-
 ## 你能得到什么
 
 - Claude Code 的 Anthropic API 调用即插即用代理
 - 十个服务商后端：DeepSeek、NVIDIA NIM、Kimi、Wafer、OpenRouter、LM Studio、llama.cpp、Ollama、OpenCode Zen 和 9routor
+- **支持 9routor 本地路由代理**，便于在受限网络下连通多家上游
 - 按模型分级路由：Opus、Sonnet、Haiku 与回退流量可分别走不同服务商
 - 通过代理的 `/v1/models` 端点原生支持 Claude Code 的 `/model` 选择器（Claude Code 需开启 Gateway 模型发现；见 [模型选择器](#模型选择器)）
 - 流式传输、工具调用、思考/推理块处理，本地请求优化
@@ -492,6 +481,34 @@ uv run pytest
 - 在 `config.provider_catalog` 注册服务商元数据，在 `providers.registry` 接好工厂
 - 添加消息平台时，在 `messaging/` 实现 `MessagingPlatform` 接口
 
+## DeepSeek 相关开源工具推荐
+
+下面这些开源项目与本仓库属于同一生态，可与 DeepSeek / Claude Code 搭配使用。点击名称跳转到对应 GitHub 仓库。
+
+| 项目 | 用途 |
+|---|---|
+| [Claude Code Haha](https://github.com/NanmiCoder/cc-haha) | 为 Claude Code 提供可插拔的增强能力与实用工具 |
+| [DeepSeek-TUI](https://github.com/Hmbown/DeepSeek-TUI) | DeepSeek API 终端界面客户端 |
+| [claude-desktop-deepseek](https://github.com/hustlxc/claude-desktop-deepseek) | 使用 DeepSeek 后端的 Claude Desktop |
+| [deepclaude](https://github.com/aattaran/deepclaude) | DeepSeek + Claude 双模型代理 |
+| [Ghostty](https://github.com/ghostty-org/ghostty) | 快速、功能丰富的终端模拟器 |
+| [cmux](https://github.com/manaflow-ai/cmux) | Claude Code 会话管理器 |
+| [yazi](https://github.com/sxyazi/yazi) | 极速终端文件管理器 |
+
+> 上述清单同步显示在管理后台的「工具推荐」区块。
+
 ## 许可
 
 MIT License。详见 [LICENSE](LICENSE)。
+
+## Star History
+
+<div align="center">
+  <a href="https://star-history.com/#jasonet/deep-claude&Date">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=jasonet/deep-claude&type=Date&theme=dark">
+      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=jasonet/deep-claude&type=Date">
+      <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=jasonet/deep-claude&type=Date" width="700">
+    </picture>
+  </a>
+</div>
