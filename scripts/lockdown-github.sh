@@ -28,10 +28,7 @@ gh api -X PATCH "repos/${SLUG}" \
     -F has_discussions=false \
     --silent
 
-echo "[2/4] Keeping forks allowed (forks=true) and visibility=public"
-gh api -X PATCH "repos/${SLUG}" \
-    -F allow_forking=true \
-    --silent
+echo "[2/4] Forks/stars rely on public-repo defaults (no API call needed)"
 
 echo "[3/4] Limiting interactions to collaborators only (expires in 6 months)"
 gh api -X PUT "repos/${SLUG}/interaction-limits" \
