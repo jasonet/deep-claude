@@ -2,7 +2,7 @@
 
 # 🤖 Deep Claude Code
 
-Use Claude Code CLI, VS Code, JetBrains ACP, or chat bots through your own Anthropic-compatible proxy.
+通过你自己的 Anthropic 兼容代理，使用 Claude Code CLI、VS Code、JetBrains ACP 或聊天机器人。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Python 3.14](https://img.shields.io/badge/python-3.14-3776ab.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
@@ -12,18 +12,18 @@ Use Claude Code CLI, VS Code, JetBrains ACP, or chat bots through your own Anthr
 [![Code style: Ruff](https://img.shields.io/badge/code%20formatting-ruff-f5a623.svg?style=for-the-badge)](https://github.com/astral-sh/ruff)
 [![Logging: Loguru](https://img.shields.io/badge/logging-loguru-4ecdc4.svg?style=for-the-badge)](https://github.com/Delgan/loguru)
 
-Deep Claude Code routes Anthropic Messages API traffic from Claude Code to **DeepSeek-first**, plus NVIDIA NIM, Kimi, Wafer, OpenRouter, LM Studio, llama.cpp, Ollama, OpenCode Zen, 9routor, and oMLX. Built for DeepSeek V4 by default with zero-config startup.
+Deep Claude Code 把 Claude Code 的 Anthropic Messages API 流量路由到 **DeepSeek 优先**，同时支持 NVIDIA NIM、Kimi、Wafer、OpenRouter、LM Studio、llama.cpp、Ollama、OpenCode Zen、9routor 和 oMLX。默认面向 DeepSeek V4 设计，零配置启动。
 
 <div align="center">
   <img src="assets/download.jpg" alt="Deep Claude Code" width="700">
 </div>
 
-[Quick Start](#quick-start) · [Providers](#choose-a-provider) · [Clients](#connect-claude-code) · [Configuration](#configuration-reference) · [Development](#development)
+[快速开始](#快速开始) · [服务商](#选一个服务商) · [客户端](#接入-claude-code) · [配置参考](#配置参考) · [开发](#开发)
 
 </div>
 
 <div align="center">
-  <img src="assets/pic.png" alt="Deep Claude Code in action" width="700">
+  <img src="assets/pic.png" alt="Deep Claude Code 实际效果" width="700">
 </div>
 
 ## Star History
@@ -38,31 +38,31 @@ Deep Claude Code routes Anthropic Messages API traffic from Claude Code to **Dee
   </a>
 </div>
 
-## What You Get
+## 你能得到什么
 
-- Drop-in proxy for Claude Code's Anthropic API calls.
-- Ten provider backends: DeepSeek, NVIDIA NIM, Kimi, Wafer, OpenRouter, LM Studio, llama.cpp, Ollama, OpenCode Zen, and 9routor.
-- Per-model routing: send Opus, Sonnet, Haiku, and fallback traffic to different providers.
-- Native Claude Code `/model` picker support through the proxy's `/v1/models` endpoint (Claude Code must opt in to Gateway model discovery; see [Model Picker](#model-picker)).
-- Streaming, tool use, reasoning/thinking block handling, and local request optimizations.
-- Optional Discord or Telegram bot wrapper for remote coding sessions.
-- Optional Usage through the VSCode extension.
-- Optional voice-note transcription through local Whisper or NVIDIA NIM.
-- Local **Admin UI** at `/admin` to edit supported proxy settings, validate changes, and check providers (loopback access only).
+- Claude Code 的 Anthropic API 调用即插即用代理
+- 十个服务商后端：DeepSeek、NVIDIA NIM、Kimi、Wafer、OpenRouter、LM Studio、llama.cpp、Ollama、OpenCode Zen 和 9routor
+- 按模型分级路由：Opus、Sonnet、Haiku 与回退流量可分别走不同服务商
+- 通过代理的 `/v1/models` 端点原生支持 Claude Code 的 `/model` 选择器（Claude Code 需开启 Gateway 模型发现；见 [模型选择器](#模型选择器)）
+- 流式传输、工具调用、思考/推理块处理，本地请求优化
+- 可选的 Discord 或 Telegram 机器人包装，用于远程编码会话
+- 通过 VSCode 扩展可选用量统计
+- 通过本地 Whisper 或 NVIDIA NIM 提供可选语音转写
+- 本地 **管理后台**位于 `/admin`，编辑代理设置、校验改动、检测服务商（仅限回环访问）
 
-## Quick Start
+## 快速开始
 
-### 1. Install the latest version of [Claude Code](https://code.claude.com/docs/en/overview) 
+### 1. 安装最新版 [Claude Code](https://code.claude.com/docs/en/overview)
 
 ```bash
 npm install -g @anthropic-ai/claude-code
 ```
 
-### 2. Install Runtime Requirements
+### 2. 安装运行时
 
-Install the latest version of [uv](https://docs.astral.sh/uv/getting-started/installation/) and Python 3.14.
+安装最新版 [uv](https://docs.astral.sh/uv/getting-started/installation/) 和 Python 3.14。
 
-macOS/Linux:
+macOS/Linux：
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -70,7 +70,7 @@ uv self update
 uv python install 3.14
 ```
 
-Windows PowerShell:
+Windows PowerShell：
 
 ```powershell
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
@@ -78,158 +78,158 @@ uv self update
 uv python install 3.14
 ```
 
-### 3. Get A DeepSeek API Key
+### 3. 获取 DeepSeek API Key
 
-Get a free or paid API key at [platform.deepseek.com/api_keys](https://platform.deepseek.com/api_keys).
+在 [platform.deepseek.com/api_keys](https://platform.deepseek.com/api_keys) 获取免费或付费 API key。
 
-Top up with a few dollars; DeepSeek is very affordable.
+充几美元即可；DeepSeek 价格非常低廉。
 
-### 4. One-Click Install
+### 4. 一键安装
 
 ```bash
 uv tool install --force git+https://github.com/jasonet/deep-claude.git
 ```
 
-Use the same command to update to the latest version.
+使用同一条命令即可更新到最新版本。
 
-### 5. Start The Proxy
+### 5. 启动代理
 
 ```bash
 dc-server
 ```
 
-After startup, the browser opens the Admin UI automatically, paste your deepseek Key:
+启动后浏览器自动打开管理后台，粘贴你的 DeepSeek Key：
 
 ```text
 Server URL: http://127.0.0.1:8082
-Admin UI:  http://127.0.0.1:8082/admin
+Admin UI:   http://127.0.0.1:8082/admin
 ```
 
-### 6. Paste Your DeepSeek API Key
+### 6. 粘贴你的 DeepSeek API Key
 
-Open the **Admin UI** (`http://127.0.0.1:8082/admin`).
+打开 **管理后台**（`http://127.0.0.1:8082/admin`）。
 
-Paste your key into **DeepSeek API Key**, then click **Validate** → **Apply**.
+把 key 粘贴到 **DeepSeek API Key**，依次点 **Validate** → **Apply**。
 
-### 7. Launch Claude Code
+### 7. 启动 Claude Code
 
 ```bash
 dcc
-# or
+# 或
 dc-claude
 ```
 
-Both commands launch Claude Code through the local proxy. Run them in your project directory.
+两条命令都会通过本地代理启动 Claude Code。在你的项目目录中运行它们。
 
-## Choose A Provider
+## 选一个服务商
 
-Pick one provider, enter its key or local URL in the Admin UI, and set `MODEL` to a provider-prefixed model slug. `MODEL` is the fallback. `MODEL_OPUS`, `MODEL_SONNET`, and `MODEL_HAIKU` can override routing for Claude Code's model tiers.
+挑一个服务商，在管理后台填它的 key 或本地 URL，把 `MODEL` 设置成带服务商前缀的模型 slug。`MODEL` 是回退值。`MODEL_OPUS`、`MODEL_SONNET`、`MODEL_HAIKU` 可以覆盖 Claude Code 各个模型层级的路由。
 
 <a id="nvidia-nim-provider"></a>
 
 ### 1. [NVIDIA NIM](https://build.nvidia.com/)
 
-Get a key at [build.nvidia.com/settings/api-keys](https://build.nvidia.com/settings/api-keys).
+在 [build.nvidia.com/settings/api-keys](https://build.nvidia.com/settings/api-keys) 获取 key。
 
-In the Admin UI, paste it into `NVIDIA_NIM_API_KEY`. The default `MODEL` is `nvidia_nim/z-ai/glm4.7`.
+在管理后台填到 `NVIDIA_NIM_API_KEY`。默认 `MODEL` 是 `nvidia_nim/z-ai/glm4.7`。
 
-Browse models at [build.nvidia.com](https://build.nvidia.com/explore/discover).
+在 [build.nvidia.com](https://build.nvidia.com/explore/discover) 浏览模型。
 
 ### 2. [Kimi](https://platform.moonshot.ai/)
 
-Get a key at [platform.moonshot.ai/console/api-keys](https://platform.moonshot.ai/console/api-keys).
+在 [platform.moonshot.ai/console/api-keys](https://platform.moonshot.ai/console/api-keys) 获取 key。
 
-In the Admin UI, paste it into `KIMI_API_KEY`, then set `MODEL` to a Kimi slug such as `kimi/kimi-k2.5`.
+在管理后台填到 `KIMI_API_KEY`，然后把 `MODEL` 设置成 Kimi slug，例如 `kimi/kimi-k2.5`。
 
-Browse models at [platform.moonshot.ai](https://platform.moonshot.ai).
+在 [platform.moonshot.ai](https://platform.moonshot.ai) 浏览模型。
 
 ### 3. [Wafer](https://wafer.ai/)
 
-Get a key from [wafer.ai](https://wafer.ai). In the Admin UI, paste it into `WAFER_API_KEY`, then set `MODEL` to a Wafer Pass model such as `wafer/DeepSeek-V4-Pro`.
+在 [wafer.ai](https://wafer.ai) 获取 key。在管理后台填到 `WAFER_API_KEY`，然后把 `MODEL` 设置成 Wafer Pass 模型，例如 `wafer/DeepSeek-V4-Pro`。
 
-Popular examples:
+常见示例：
 
 - `wafer/DeepSeek-V4-Pro`
 - `wafer/MiniMax-M2.7`
 - `wafer/Qwen3.5-397B-A17B`
 - `wafer/GLM-5.1`
 
-This provider uses Wafer's Anthropic-compatible endpoint at `https://pass.wafer.ai/v1/messages`.
+该服务商使用 Wafer 的 Anthropic 兼容端点 `https://pass.wafer.ai/v1/messages`。
 
 ### 4. [OpenRouter](https://openrouter.ai/)
 
-Get a key at [openrouter.ai/keys](https://openrouter.ai/keys).
+在 [openrouter.ai/keys](https://openrouter.ai/keys) 获取 key。
 
-In the Admin UI, paste it into `OPENROUTER_API_KEY`, then set `MODEL` to an OpenRouter slug such as `open_router/stepfun/step-3.5-flash:free`.
+在管理后台填到 `OPENROUTER_API_KEY`，然后把 `MODEL` 设置成 OpenRouter slug，例如 `open_router/stepfun/step-3.5-flash:free`。
 
-Browse [all models](https://openrouter.ai/models) or [free models](https://openrouter.ai/collections/free-models).
+浏览[全部模型](https://openrouter.ai/models)或[免费模型](https://openrouter.ai/collections/free-models)。
 
 ### 5. [DeepSeek](https://platform.deepseek.com/)
 
-Get a key at [platform.deepseek.com/api_keys](https://platform.deepseek.com/api_keys).
+在 [platform.deepseek.com/api_keys](https://platform.deepseek.com/api_keys) 获取 key。
 
-In the Admin UI, paste it into `DEEPSEEK_API_KEY`, then set `MODEL` to a DeepSeek slug such as `deepseek/deepseek-chat`.
+在管理后台填到 `DEEPSEEK_API_KEY`，然后把 `MODEL` 设置成 DeepSeek slug，例如 `deepseek/deepseek-chat`。
 
-This provider uses DeepSeek's Anthropic-compatible endpoint, not the OpenAI chat-completions endpoint.
+该服务商使用 DeepSeek 的 Anthropic 兼容端点，**不是** OpenAI 风格的 chat-completions 端点。
 
 ### 6. [LM Studio](https://lmstudio.ai/)
 
-Start LM Studio's local server and load a model. In the Admin UI, keep or update `LM_STUDIO_BASE_URL`, then set `MODEL` to the model identifier shown by LM Studio, prefixed with `lmstudio/`.
+启动 LM Studio 的本地服务器并加载一个模型。在管理后台保留或更新 `LM_STUDIO_BASE_URL`，然后把 `MODEL` 设置成 LM Studio 显示的模型标识，加 `lmstudio/` 前缀。
 
-Prefer models with tool-use support for Claude Code workflows.
+工具调用相关的工作流推荐使用支持工具的模型。
 
 ### 7. [llama.cpp](https://github.com/ggml-org/llama.cpp)
 
-Start `llama-server` with an Anthropic-compatible `/v1/messages` endpoint and enough context for Claude Code requests.
+启动 `llama-server`，提供 Anthropic 兼容的 `/v1/messages` 端点，并预留足够的上下文供 Claude Code 请求使用。
 
-In the Admin UI, keep or update `LLAMACPP_BASE_URL`, then set `MODEL` to the local model slug, prefixed with `llamacpp/`.
+在管理后台保留或更新 `LLAMACPP_BASE_URL`，然后把 `MODEL` 设置成本地模型 slug，加 `llamacpp/` 前缀。
 
-For local coding models, context size matters. If llama.cpp returns HTTP 400 for normal Claude Code requests, increase `--ctx-size` and verify the model/server build supports the requested features.
+本地编码模型的上下文长度很重要。若 llama.cpp 对正常的 Claude Code 请求返回 HTTP 400，请增大 `--ctx-size` 并确认所选模型/服务端编译版本支持所需功能。
 
 ### 8. [Ollama](https://ollama.com/)
 
-Run Ollama and pull a model:
+运行 Ollama 并拉一个模型：
 
 ```bash
 ollama pull llama3.1
 ollama serve
 ```
 
-In the Admin UI, keep or update `OLLAMA_BASE_URL`, then set `MODEL` to the same tag shown by `ollama list`, prefixed with `ollama/`.
+在管理后台保留或更新 `OLLAMA_BASE_URL`，把 `MODEL` 设置成 `ollama list` 显示的同样 tag，加 `ollama/` 前缀。
 
-`OLLAMA_BASE_URL` is the Ollama server root; do not append `/v1`. Example model slugs include `ollama/llama3.1` and `ollama/llama3.1:8b`.
+`OLLAMA_BASE_URL` 是 Ollama 服务器根地址，**不要**追加 `/v1`。模型 slug 示例：`ollama/llama3.1` 和 `ollama/llama3.1:8b`。
 
 ### 9. [OpenCode Zen](https://opencode.ai/)
 
-Get an API key at [opencode.ai/auth](https://opencode.ai/auth).
+在 [opencode.ai/auth](https://opencode.ai/auth) 获取 API key。
 
-In the Admin UI, paste it into `OPENCODE_API_KEY`, then set `MODEL` to an OpenCode Zen model slug such as `opencode/gpt-5.3-codex`.
+在管理后台填到 `OPENCODE_API_KEY`，然后把 `MODEL` 设置成 OpenCode Zen 模型 slug，例如 `opencode/gpt-5.3-codex`。
 
-OpenCode Zen is a curated model gateway that provides access to models from Anthropic, OpenAI, Google, DeepSeek, and more through a single API key and OpenAI-compatible endpoint at `https://opencode.ai/zen/v1`.
+OpenCode Zen 是一个精选的模型网关，通过单一 API key 和 OpenAI 兼容端点 `https://opencode.ai/zen/v1` 提供来自 Anthropic、OpenAI、Google、DeepSeek 等多家厂商的模型。
 
-Browse available models at [opencode.ai](https://opencode.ai).
+在 [opencode.ai](https://opencode.ai) 浏览可用模型。
 
-### 10. Mix Providers By Model Tier
+### 10. 按模型层级混搭服务商
 
-Each model tier can use a different provider by setting `MODEL_OPUS`, `MODEL_SONNET`, and `MODEL_HAIKU` in the Admin UI. Leave a tier blank to inherit `MODEL`.
+通过在管理后台分别设置 `MODEL_OPUS`、`MODEL_SONNET`、`MODEL_HAIKU`，每个模型层级可以使用不同服务商。某一层留空则继承 `MODEL`。
 
-For example, you can route Opus to `nvidia_nim/moonshotai/kimi-k2.5`, Sonnet to `open_router/deepseek/deepseek-r1-0528:free`, Haiku to `lmstudio/unsloth/GLM-4.7-Flash-GGUF`, and keep the fallback `MODEL` on `opencode/gpt-5.3-codex`.
+举例：Opus 路由到 `nvidia_nim/moonshotai/kimi-k2.5`，Sonnet 走 `open_router/deepseek/deepseek-r1-0528:free`，Haiku 走 `lmstudio/unsloth/GLM-4.7-Flash-GGUF`，回退 `MODEL` 保持 `opencode/gpt-5.3-codex`。
 
-## Connect Claude Code
+## 接入 Claude Code
 
 ### 1. Claude Code CLI
 
-For terminal use, prefer the installed launcher:
+终端使用推荐已安装的启动器：
 
 ```bash
-dcc or dc-claude
+dcc 或 dc-claude
 ```
 
-Keep `dc-server` running while you work. The Admin UI manages proxy config, restarts the server when runtime settings change, and `dc-claude` reads the current Admin UI-managed port and auth token every time it starts.
+工作时保持 `dc-server` 运行。管理后台负责管理代理配置、在运行时设置变更时重启服务，`dc-claude` 每次启动都会读取管理后台维护的端口和 auth token。
 
-### 2. VS Code Extension
+### 2. VS Code 扩展
 
-Open Settings, search for `claude-code.environmentVariables`, choose **Edit in settings.json**, and add:
+打开设置，搜索 `claude-code.environmentVariables`，选择 **Edit in settings.json**，添加：
 
 ```json
 "claudeCode.environmentVariables": [
@@ -239,16 +239,16 @@ Open Settings, search for `claude-code.environmentVariables`, choose **Edit in s
 ]
 ```
 
-Reload the extension. If the extension shows a login screen, choose the Anthropic Console path once; the local proxy still handles model traffic after the environment variables are active.
+重新加载扩展。如果扩展显示登录页面，选择一次 Anthropic Console 路径即可；环境变量生效后，本地代理仍然会接管模型流量。
 
 ### 3. JetBrains ACP
 
-Edit the installed Claude ACP config:
+编辑已安装的 Claude ACP 配置：
 
-- Windows: `C:\Users\%USERNAME%\AppData\Roaming\JetBrains\acp-agents\installed.json`
-- Linux/macOS: `~/.jetbrains/acp.json`
+- Windows：`C:\Users\%USERNAME%\AppData\Roaming\JetBrains\acp-agents\installed.json`
+- Linux/macOS：`~/.jetbrains/acp.json`
 
-Set the environment for `acp.registry.claude-acp`:
+为 `acp.registry.claude-acp` 设置 env：
 
 ```json
 "env": {
@@ -258,21 +258,21 @@ Set the environment for `acp.registry.claude-acp`:
 }
 ```
 
-Restart the IDE after changing the file.
+改完之后重启 IDE。
 
-### 4. Model Picker
+### 4. 模型选择器
 
 <div align="center">
-  <img src="assets/cc-model-picker.png" alt="Claude Code model picker showing gateway models" width="700">
+  <img src="assets/cc-model-picker.png" alt="Claude Code 显示 gateway 模型的选择器" width="700">
 </div>
 
-## Optional Integrations
+## 可选集成
 
-### 1. Discord And Telegram Bots
+### 1. Discord 和 Telegram 机器人
 
-The bot wrapper runs Claude Code sessions remotely, streams progress, supports reply-based conversation branches, and can stop or clear tasks.
+机器人包装在远程运行 Claude Code 会话，流式推送进度，支持按回复分支的会话，并能停止或清空任务。
 
-Discord minimum config:
+Discord 最小配置：
 
 ```dotenv
 MESSAGING_PLATFORM="discord"
@@ -282,9 +282,9 @@ CLAUDE_WORKSPACE="./agent_workspace"
 ALLOWED_DIR="C:/Users/yourname/projects"
 ```
 
-Create the bot in the [Discord Developer Portal](https://discord.com/developers/applications), enable Message Content Intent, and invite it with read/send/history permissions.
+在 [Discord 开发者门户](https://discord.com/developers/applications)创建机器人，启用 Message Content Intent，并以读/发/查历史权限邀请它进群。
 
-Telegram minimum config:
+Telegram 最小配置：
 
 ```dotenv
 MESSAGING_PLATFORM="telegram"
@@ -294,17 +294,17 @@ CLAUDE_WORKSPACE="./agent_workspace"
 ALLOWED_DIR="C:/Users/yourname/projects"
 ```
 
-Get a token from [@BotFather](https://t.me/BotFather) and your user ID from [@userinfobot](https://t.me/userinfobot).
+去 [@BotFather](https://t.me/BotFather) 拿 token，去 [@userinfobot](https://t.me/userinfobot) 查你的用户 ID。
 
-Useful commands:
+常用命令：
 
-- `/stop` cancels a task; reply to a task message to stop only that branch.
-- `/clear` resets sessions; reply to clear one branch.
-- `/stats` shows session state.
+- `/stop` 取消任务；回复某条任务消息只停那个分支
+- `/clear` 重置会话；回复消息只清那个分支
+- `/stats` 查看会话状态
 
-### 2. Voice Notes
+### 2. 语音笔记
 
-Voice notes work on Discord and Telegram. Choose one backend:
+语音笔记在 Discord 和 Telegram 上都可用。选一个后端：
 
 ```bash
 uv sync --extra voice_local
@@ -319,21 +319,21 @@ WHISPER_MODEL="base"
 HF_TOKEN=""
 ```
 
-Use `WHISPER_DEVICE="nvidia_nim"` with the `voice` extra and `NVIDIA_NIM_API_KEY` for NVIDIA-hosted transcription.
+`WHISPER_DEVICE="nvidia_nim"` 配合 `voice` extra 和 `NVIDIA_NIM_API_KEY` 即可使用 NVIDIA 托管转写。
 
-## Configuration Reference
+## 配置参考
 
-[`.env.example`](.env.example) is the canonical list of variables. The sections below are the ones most users change.
+[`.env.example`](.env.example) 是变量的权威清单。下面列出大多数用户最常改的几节。
 
-### 1. Manual `.env` Setup (Headless)
+### 1. 手动 `.env` 配置（无 UI）
 
-Use this only if you prefer file-based config or are running headless. The Admin UI is easier for first setup.
+仅在你偏好文件配置或运行无头模式时使用。首次配置建议优先用管理后台。
 
 ```bash
 cp .env.example .env
 ```
 
-Example for NVIDIA NIM:
+NVIDIA NIM 示例：
 
 ```dotenv
 NVIDIA_NIM_API_KEY="nvapi-your-key"
@@ -341,9 +341,9 @@ MODEL="nvidia_nim/z-ai/glm4.7"
 ANTHROPIC_AUTH_TOKEN="dc-auth"
 ```
 
-Config precedence is repo `.env`, then `~/.config/deep-claude/.env`, then `DCC_ENV_FILE` when set. `ANTHROPIC_AUTH_TOKEN` can be any local secret; pass the same value to Claude Code.
+配置优先级：仓库 `.env`，然后 `~/.config/deep-claude/.env`，最后是 `DCC_ENV_FILE`（如已设置）。`ANTHROPIC_AUTH_TOKEN` 可以是任意本地 secret；把同一个值传给 Claude Code。
 
-### 2. Model Routing
+### 2. 模型路由
 
 ```dotenv
 MODEL="nvidia_nim/z-ai/glm4.7"
@@ -356,9 +356,9 @@ ENABLE_SONNET_THINKING=
 ENABLE_HAIKU_THINKING=
 ```
 
-Blank per-tier values inherit the fallback. Blank thinking overrides inherit `ENABLE_MODEL_THINKING`.
+分层级值留空则继承回退值。思考覆盖留空则继承 `ENABLE_MODEL_THINKING`。
 
-### 3. Provider Keys And URLs
+### 3. 服务商 Key 和 URL
 
 ```dotenv
 NVIDIA_NIM_API_KEY=""
@@ -371,7 +371,7 @@ LLAMACPP_BASE_URL="http://localhost:8080/v1"
 OLLAMA_BASE_URL="http://localhost:11434"
 ```
 
-Proxy settings are per provider:
+每个服务商独立代理设置：
 
 ```dotenv
 NVIDIA_NIM_PROXY=""
@@ -382,7 +382,7 @@ WAFER_PROXY=""
 OPENCODE_PROXY=""
 ```
 
-### 4. Rate Limits And Timeouts
+### 4. 限流和超时
 
 ```dotenv
 PROVIDER_RATE_LIMIT=1
@@ -393,9 +393,9 @@ HTTP_WRITE_TIMEOUT=10
 HTTP_CONNECT_TIMEOUT=10
 ```
 
-Use lower limits for free hosted providers; local providers can usually tolerate higher concurrency if the machine can handle it.
+免费托管服务商建议把限制调低；本地服务商在机器性能足够时可以提升并发。
 
-### 5. Security And Diagnostics
+### 5. 安全和诊断
 
 ```dotenv
 ANTHROPIC_AUTH_TOKEN=
@@ -407,11 +407,11 @@ LOG_RAW_CLI_DIAGNOSTICS=false
 LOG_MESSAGING_ERROR_DETAILS=false
 ```
 
-Raw logging flags can expose prompts, tool arguments, paths, and model output. Keep them off unless you are debugging locally.
+原始日志开关可能暴露 prompt、工具参数、路径以及模型输出。仅在本地调试时打开。
 
-Structured TRACE rows append fields such as `"trace": true`, `stage`, `event`, and `source` and include conversation context needed to follow Claude Code flows end-to-end. Dictionary keys resembling credentials (for example `api_key` / `authorization` values nested in structured payloads) are redacted; arbitrary prose you type into prompts may still appear verbatim.
+结构化 TRACE 行带 `"trace": true`、`stage`、`event`、`source` 等字段，并附带跟踪 Claude Code 流程所需的会话上下文。看起来像凭据的字典键（例如嵌套在结构化负载里的 `api_key` / `authorization` 值）会被脱敏；但你输入到 prompt 里的任意自然语言文本仍可能原样出现。
 
-### 6. Local Web Tools
+### 6. 本地 Web 工具
 
 ```dotenv
 ENABLE_WEB_SERVER_TOOLS=true
@@ -419,44 +419,44 @@ WEB_FETCH_ALLOWED_SCHEMES=http,https
 WEB_FETCH_ALLOW_PRIVATE_NETWORKS=false
 ```
 
-These tools perform outbound HTTP from the proxy. Keep private-network access disabled unless you are in a controlled lab environment.
+这些工具会从代理发出对外 HTTP 请求。除非你在受控的实验环境，否则别打开私有网络访问。
 
-## How It Works
+## 工作原理
 
 <div align="center">
-  <img src="assets/how-it-works.svg" alt="Deep Claude Code request flow architecture" width="900">
+  <img src="assets/how-it-works.svg" alt="Deep Claude Code 请求流架构" width="900">
 </div>
 
-Diagram source: [`assets/how-it-works.mmd`](assets/how-it-works.mmd).
+图表源文件：[`assets/how-it-works.mmd`](assets/how-it-works.mmd)。
 
-Important pieces:
+关键组件：
 
-- FastAPI exposes Anthropic-compatible routes such as `/v1/messages`, `/v1/messages/count_tokens`, and `/v1/models`.
-- Model routing resolves the Claude model name to `MODEL_OPUS`, `MODEL_SONNET`, `MODEL_HAIKU`, or `MODEL`.
-- NIM, OpenCode Zen use OpenAI chat streaming translated into Anthropic SSE.
-- Wafer, OpenRouter, DeepSeek, LM Studio, llama.cpp, and Ollama use Anthropic Messages style transports.
-- The proxy normalizes thinking blocks, tool calls, token usage metadata, and provider errors into the shape Claude Code expects.
-- Request optimizations answer trivial Claude Code probes locally to save latency and quota.
+- FastAPI 暴露 Anthropic 兼容路由，包括 `/v1/messages`、`/v1/messages/count_tokens`、`/v1/models`
+- 模型路由把 Claude 模型名解析为 `MODEL_OPUS`、`MODEL_SONNET`、`MODEL_HAIKU` 或 `MODEL`
+- NIM、OpenCode Zen 使用 OpenAI 风格 chat 流式，再转换为 Anthropic SSE
+- Wafer、OpenRouter、DeepSeek、LM Studio、llama.cpp 和 Ollama 使用 Anthropic Messages 风格的传输
+- 代理把 thinking 块、工具调用、token 用量元数据和服务商错误统一为 Claude Code 期望的形态
+- 请求优化在本地直接回复 Claude Code 的琐碎探测请求，节省延迟和配额
 
-## Development
+## 开发
 
-### 1. Project Structure
+### 1. 项目结构
 
 ```text
 deep-claude/
-├── server.py              # ASGI entry point
-├── api/                   # FastAPI routes, service layer, routing, optimizations
-├── core/                  # Shared Anthropic protocol helpers and SSE utilities
-├── providers/             # Provider transports, registry, rate limiting
-├── messaging/             # Discord/Telegram adapters, sessions, voice
-├── cli/                   # Package entry points and Claude process management
-├── config/                # Settings, provider catalog, logging
-└── tests/                 # Unit and contract tests
+├── server.py              # ASGI 入口
+├── api/                   # FastAPI 路由、服务层、路由表、优化
+├── core/                  # 共享 Anthropic 协议辅助和 SSE 工具
+├── providers/             # 服务商传输、注册表、限流
+├── messaging/             # Discord/Telegram 适配、会话、语音
+├── cli/                   # 包入口和 Claude 进程管理
+├── config/                # 设置、服务商目录、日志
+└── tests/                 # 单元和契约测试
 ```
 
-### 2. Run From Source
+### 2. 从源代码运行
 
-Use this path if you are developing or want to run directly from a checkout:
+如果你在做开发或想直接从 checkout 运行：
 
 ```bash
 git clone https://github.com/jasonet/deep-claude.git
@@ -464,7 +464,7 @@ cd deep-claude
 uv run uvicorn server:app --host 0.0.0.0 --port 8082
 ```
 
-### 3. Commands
+### 3. 命令
 
 ```bash
 uv run ruff format
@@ -473,34 +473,34 @@ uv run ty check
 uv run pytest
 ```
 
-Run them in that order before pushing. CI enforces the same checks.
+推送前依次跑这几条。CI 会强制同样的检查。
 
-### 4. Package Scripts
+### 4. 包脚本
 
-`pyproject.toml` installs:
+`pyproject.toml` 安装：
 
-- `dc-server`: starts the proxy with configured host and port.
-- `dc-init`: optional file-based config scaffold at `~/.config/deep-claude/.env`.
-- `dcc`: launches Claude Code with the configured local proxy URL (DeepSeek-first).
-- `dc-claude`: same as `dcc`; launches Claude Code through the proxy.
-- `deep-claude`: compatibility alias for `dc-server`.
+- `dc-server`：用配置的 host 和 port 启动代理
+- `dc-init`：可选的文件配置骨架到 `~/.config/deep-claude/.env`
+- `dcc`：用配置的本地代理 URL 启动 Claude Code（DeepSeek 优先）
+- `dc-claude`：等同于 `dcc`；通过代理启动 Claude Code
+- `deep-claude`：`dc-server` 的兼容别名
 
-### 5. Extending
+### 5. 扩展
 
-- Add OpenAI-compatible providers by extending `OpenAIChatTransport`.
-- Add Anthropic Messages providers by extending `AnthropicMessagesTransport`.
-- Register provider metadata in `config.provider_catalog` and factory wiring in `providers.registry`.
-- Add messaging platforms by implementing the `MessagingPlatform` interface in `messaging/`.
+- 添加 OpenAI 兼容的服务商时，继承 `OpenAIChatTransport`
+- 添加 Anthropic Messages 服务商时，继承 `AnthropicMessagesTransport`
+- 在 `config.provider_catalog` 注册服务商元数据，在 `providers.registry` 接好工厂
+- 添加消息平台时，在 `messaging/` 实现 `MessagingPlatform` 接口
 
-## Contributing
+## 贡献
 
-- Report bugs and feature requests in [Issues](https://github.com/jasonet/deep-claude/issues).
-- Keep changes small and covered by focused tests.
-- Do not open Docker integration PRs.
-- Do not open README change PRs just open an issue for it.
-- Run the full check sequence before opening a pull request.
-- The syntax `except X, Y` is brought back in python 3.14 final version (not in 3.14 alpha). Keep in mind before opening PRs.
+- 在 [Issues](https://github.com/jasonet/deep-claude/issues) 报告 bug 和提交需求
+- 改动尽量小、由聚焦的测试覆盖
+- 不要提交 Docker 集成相关 PR
+- 不要直接提 README 修改 PR，先开 issue 讨论
+- 打开 PR 前完整跑一遍检查流程
+- `except X, Y` 语法在 Python 3.14 正式版（非 alpha）已恢复支持。开 PR 前请记住这一点。
 
-## License
+## 许可
 
-MIT License. See [LICENSE](LICENSE) for details.
+MIT License。详见 [LICENSE](LICENSE)。
