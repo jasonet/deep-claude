@@ -39,6 +39,21 @@ Deep Claude Code 把 Claude Code 的 Anthropic Messages API 流量路由到 **De
 - 通过本地 Whisper 或 NVIDIA NIM 提供可选语音转写
 - 本地 **管理后台**位于 `/admin`，编辑代理设置、校验改动、检测服务商（仅限回环访问）
 
+## 工作原理
+
+<div align="center">
+  <img src="assets/how-it-works.png" alt="Deep Claude Code 工作原理" width="900">
+</div>
+
+关键组件：
+
+- FastAPI 暴露 Anthropic 兼容路由，包括 `/v1/messages`、`/v1/messages/count_tokens`、`/v1/models`
+- 模型路由把 Claude 模型名解析为 `MODEL_OPUS`、`MODEL_SONNET`、`MODEL_HAIKU` 或 `MODEL`
+- NIM、OpenCode Zen 使用 OpenAI 风格 chat 流式，再转换为 Anthropic SSE
+- Wafer、OpenRouter、DeepSeek、LM Studio、llama.cpp 和 Ollama 使用 Anthropic Messages 风格的传输
+- 代理把 thinking 块、工具调用、token 用量元数据和服务商错误统一为 Claude Code 期望的形态
+- 请求优化在本地直接回复 Claude Code 的琐碎探测请求，节省延迟和配额
+
 ## 快速开始
 
 ### 1. 安装最新版 [Claude Code](https://code.claude.com/docs/en/overview)
@@ -409,21 +424,6 @@ WEB_FETCH_ALLOW_PRIVATE_NETWORKS=false
 ```
 
 这些工具会从代理发出对外 HTTP 请求。除非你在受控的实验环境，否则别打开私有网络访问。
-
-## 工作原理
-
-<div align="center">
-  <img src="assets/how-it-works.png" alt="Deep Claude Code 工作原理" width="900">
-</div>
-
-关键组件：
-
-- FastAPI 暴露 Anthropic 兼容路由，包括 `/v1/messages`、`/v1/messages/count_tokens`、`/v1/models`
-- 模型路由把 Claude 模型名解析为 `MODEL_OPUS`、`MODEL_SONNET`、`MODEL_HAIKU` 或 `MODEL`
-- NIM、OpenCode Zen 使用 OpenAI 风格 chat 流式，再转换为 Anthropic SSE
-- Wafer、OpenRouter、DeepSeek、LM Studio、llama.cpp 和 Ollama 使用 Anthropic Messages 风格的传输
-- 代理把 thinking 块、工具调用、token 用量元数据和服务商错误统一为 Claude Code 期望的形态
-- 请求优化在本地直接回复 Claude Code 的琐碎探测请求，节省延迟和配额
 
 ## 开发
 
