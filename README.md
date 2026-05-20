@@ -494,12 +494,9 @@ uv run pytest
 
 ## 贡献
 
-- 在 [Issues](https://github.com/jasonet/deep-claude/issues) 报告 bug 和提交需求
-- 改动尽量小、由聚焦的测试覆盖
-- 不要提交 Docker 集成相关 PR
-- 不要直接提 README 修改 PR，先开 issue 讨论
-- 打开 PR 前完整跑一遍检查流程
-- `except X, Y` 语法在 Python 3.14 正式版（非 alpha）已恢复支持。开 PR 前请记住这一点。
+本仓库由 [@jasonet](https://github.com/jasonet) 个人维护，**不接受任何外部贡献**。详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
+欢迎 Star 和 Fork；按 [MIT License](LICENSE)，你完全可以基于自己的 Fork 自由修改。
 
 ## 许可
 

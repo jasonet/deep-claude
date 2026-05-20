@@ -1,0 +1,4 @@
+# Every file in this repository is owned by @jasonet.
+# Used together with branch protection requiring code-owner review:
+# any pull request must be approved by @jasonet before it can be merged.
+* @jasonet
