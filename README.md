@@ -492,12 +492,6 @@ uv run pytest
 - 在 `config.provider_catalog` 注册服务商元数据，在 `providers.registry` 接好工厂
 - 添加消息平台时，在 `messaging/` 实现 `MessagingPlatform` 接口
 
-## 贡献
-
-本仓库由 [@jasonet](https://github.com/jasonet) 个人维护，**不接受任何外部贡献**。详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
-
-欢迎 Star 和 Fork；按 [MIT License](LICENSE)，你完全可以基于自己的 Fork 自由修改。
-
 ## 许可
 
 MIT License。详见 [LICENSE](LICENSE)。
